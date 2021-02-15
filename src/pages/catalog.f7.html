@@ -29,8 +29,9 @@
                   height="50" /></div>
               <div class="item-inner">
                 <div class="item-title">
-                  <div class="item-header">${users.user.username}</div>${users.user.full_name}
+                  <div class="item-header">${users.user.username}</div>${users.user.full_name} 
                 </div>
+                <div class="item-after">${verifiedUser(users.user.is_verified)} ${privateUser(users.user.is_private)}</div>
               </div>
             </a>
           </li>
@@ -51,6 +52,18 @@
     $f7
   }) => {
     let usersArray = [];
+
+    const verifiedUser = function(booleanValue) {
+        if (booleanValue) {
+          return <i class="material-icons icon">verified_user</i>;
+        }
+    }
+
+    const privateUser = function(booleanValue) {
+        if (booleanValue) {
+          return <i class="material-icons icon padding-left-half">lock</i>;
+        }
+    }
 
     const searchUser = function(){
       $('#searchbarLoader').show();

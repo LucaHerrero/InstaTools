@@ -1,5 +1,5 @@
 import $ from 'dom7';
-import Framework7 from 'framework7/bundle';
+import Framework7 from './f7config';
 
 // Import F7 Styles
 import 'framework7/framework7-bundle.css';
