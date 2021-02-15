@@ -3,38 +3,70 @@
     <div class="navbar">
       <div class="navbar-bg"></div>
       <div class="navbar-inner sliding">
-        <div class="title">Catalog</div>
+        <div class="title">Search</div>
+        <div class="subnavbar">
+          <form class="searchbar" id="searchbar-autocomplete">
+            <div class="searchbar-inner">
+              <div class="searchbar-input-wrap">
+                <input type="search" id="searchBar" placeholder="Search" oninput="${searchUser}"/>
+                <i class="searchbar-icon"></i>
+                <span class="input-clear-button"></span>
+              </div>
+              <div class="preloader color-multi" id="searchbarLoader" style="display:none"></div>
+              <span class="searchbar-disable-button">Cancel</span>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
     <div class="page-content">
-      <div class="list links-list">
+      <div class="list no-margin-top">
         <ul>
-          ${products.value.map((product) => $h`
-            <li><a href="/product/${product.id}/">${product.title}</a></li>
+          ${usersArray.map((users) => $h`
+          <li>
+            <a href="#" class="item-link item-content">
+              <div class="item-media"><img style="border-radius: 100%;" src="${users.user.profile_pic_url}"
+                  height="50" /></div>
+              <div class="item-inner">
+                <div class="item-title">
+                  <div class="item-header">${users.user.username}</div>${users.user.full_name}
+                </div>
+              </div>
+            </a>
+          </li>
           `)}
         </ul>
       </div>
-      ${products.value.length === 3 && $h`
-        <div class="block">
-          <button class="button button-fill" @click=${addProduct}>Add Product</Button>
-        </div>
-      `}
     </div>
   </div>
 </template>
 <script>
-  export default (props, { $store }) => {
-    const products = $store.getters.products;
+  import {
+    request
+  } from 'framework7';
 
-    const addProduct = () => {
-      $store.dispatch('addProduct', {
-        id: '4',
-        title: 'Apple iPhone 12',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi tempora similique reiciendis, error nesciunt vero, blanditiis pariatur dolor, minima sed sapiente rerum, dolorem corrupti hic modi praesentium unde saepe perspiciatis.'
+  export default (props, {
+    $update,
+    $,
+    $f7
+  }) => {
+    let usersArray = [];
+
+    const searchUser = function(){
+      $('#searchbarLoader').show();
+      let input = $('#searchBar').value();
+      request.get('https://www.instagram.com/web/search/topsearch/?context=user&query=' + input).then((res) => {
+        try {
+          usersArray = JSON.parse(res.data)['users'];
+        } catch (error) {
+          $f7.dialog.alert('Instagram blocked your request', 'An Error');
+        }
+        
+        $('#searchbarLoader').hide();
+        $update();
       });
     }
 
     return $render;
   }
-
 </script>
