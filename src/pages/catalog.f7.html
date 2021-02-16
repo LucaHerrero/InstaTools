@@ -55,13 +55,13 @@
 
     const verifiedUser = function(booleanValue) {
         if (booleanValue) {
-          return <i class="material-icons icon">verified_user</i> + <i class="icon f7-icons if-not-md">checkmark_seal</i>;
+          return [<i class="material-icons icon if-md">verified_user</i>, <i class="icon f7-icons if-not-md" style="font-size:20px;">checkmark_seal</i>];
         }
     }
 
     const privateUser = function(booleanValue) {
         if (booleanValue) {
-          return <i class="material-icons icon padding-left-half if-md">lock</i> + <i class="icon f7-icons if-not-md">lock</i>;
+          return [<i class="material-icons icon padding-left-half if-md">lock</i>, <i class="icon f7-icons padding-left-half if-not-md" style="font-size:20px;">lock</i>];
         }
     }
 
