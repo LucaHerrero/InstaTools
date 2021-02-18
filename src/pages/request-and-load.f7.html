@@ -9,18 +9,16 @@
             <span class="if-not-md">Back</span>
           </a>
         </div>
-        <div class="title">${user.firstName} ${user.lastName}</div>
+        <div class="title">${userTitle()}</div>
       </div>
     </div>
     <div class="page-content">
       <div class="block block-strong">
-        ${user.about}
+        <img class="profilPic" src="${user.profile_pic_url}"/>
       </div>
       <div class="list links-list">
         <ul>
-          ${user.links.map((link) => $h`
-            <li><a class="external" target="_blank" href="${link.url}">${link.title}</a></li>
-          `)}
+          
         </ul>
       </div>
     </div>
@@ -28,8 +26,20 @@
 </template>
 <script>
   export default (props) => {
-    const user = props.user;
+    const user = props.user.graphql.user;
+
+
+    const userTitle = function(){
+      if (user.full_name != "") {
+        return user.full_name;
+      }
+      return user.username; 
+    }
+
 
     return $render;
   }
 </script>
+<style>
+
+</style>

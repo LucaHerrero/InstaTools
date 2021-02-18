@@ -24,7 +24,7 @@
         <ul>
           ${usersArray.map((users) => $h`
           <li>
-            <a href="#" class="item-link item-content">
+            <a href="/user/${users.user.username}/" class="item-link item-content">
               <div class="item-media"><img style="border-radius: 100%;" src="${users.user.profile_pic_url}"
                   height="50" /></div>
               <div class="item-inner">
