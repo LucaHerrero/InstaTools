@@ -1,4 +1,3 @@
-
 import HomePage from '../pages/home.f7.html';
 import AboutPage from '../pages/about.f7.html';
 import FormPage from '../pages/form.f7.html';
@@ -10,8 +9,7 @@ import DynamicRoutePage from '../pages/dynamic-route.f7.html';
 import RequestAndLoad from '../pages/request-and-load.f7.html';
 import NotFoundPage from '../pages/404.f7.html';
 
-var routes = [
-  {
+var routes = [{
     path: '/',
     component: HomePage,
   },
@@ -41,50 +39,39 @@ var routes = [
     component: DynamicRoutePage,
   },
   {
-    path: '/request-and-load/user/:userId/',
-    async: function ({ router, to, resolve }) {
+    path: '/user/:userName/',
+    async: function ({
+      router,
+      to,
+      resolve
+    }) {
       // App instance
       var app = router.app;
+
 
       // Show Preloader
       app.preloader.show();
 
       // User ID from request
-      var userId = to.params.userId;
+      var userName = to.params.userName;
 
       // Simulate Ajax Request
-      setTimeout(function () {
-        // We got user data from request
-        var user = {
-          firstName: 'Vladimir',
-          lastName: 'Kharlampidi',
-          about: 'Hello, i am creator of Framework7! Hope you like it!',
-          links: [
-            {
-              title: 'Framework7 Website',
-              url: 'http://framework7.io',
-            },
-            {
-              title: 'Framework7 Forum',
-              url: 'http://forum.framework7.io',
-            },
-          ]
-        };
-        // Hide Preloader
-        app.preloader.hide();
-
-        // Resolve route to load page
-        resolve(
-          {
+      app.request.get('https://www.instagram.com/' + userName + '/?__a=1')
+        .then(function (res) {
+          console.log(res.data);
+          app.preloader.hide();
+          var user = JSON.parse(res.data);
+          resolve({
             component: RequestAndLoad,
-          },
-          {
+          }, {
             props: {
               user: user,
             }
-          }
-        );
-      }, 1000);
+          });
+        })
+        .catch(function (err) {
+          app.preloader.hide();
+        })
     },
   },
   {
