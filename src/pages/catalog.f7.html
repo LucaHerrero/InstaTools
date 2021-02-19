@@ -29,9 +29,10 @@
                   height="50" /></div>
               <div class="item-inner">
                 <div class="item-title">
-                  <div class="item-header">${users.user.username}</div>${users.user.full_name} 
+                  <div class="item-header">${users.user.username}</div>${users.user.full_name}
                 </div>
-                <div class="item-after">${verifiedUser(users.user.is_verified)} ${privateUser(users.user.is_private)}</div>
+                <div class="item-after">${verifiedUser(users.user.is_verified)} ${privateUser(users.user.is_private)}
+                </div>
               </div>
             </a>
           </li>
@@ -53,31 +54,46 @@
   }) => {
     let usersArray = [];
 
-    const verifiedUser = function(booleanValue) {
-        if (booleanValue) {
-          return [<i class="material-icons icon if-md">verified_user</i>, <i class="icon f7-icons if-not-md" style="font-size:20px;">checkmark_seal</i>];
-        }
+    const verifiedUser = function (booleanValue) {
+      if (booleanValue) {
+        return [ 
+          <i class="material-icons icon if-md">verified_user</i>, 
+          <i class="icon f7-icons if-not-md" style="font-size:20px;">checkmark_seal</i>
+        ];
+      }
     }
 
-    const privateUser = function(booleanValue) {
-        if (booleanValue) {
-          return [<i class="material-icons icon padding-left-half if-md">lock</i>, <i class="icon f7-icons padding-left-half if-not-md" style="font-size:20px;">lock</i>];
-        }
+    const privateUser = function (booleanValue) {
+      if (booleanValue) {
+        return [ 
+          <i class="material-icons icon padding-left-half if-md">lock</i>, 
+          <i class="icon f7-icons padding-left-half if-not-md" style="font-size:20px;">lock</i>
+        ];
+      }
     }
 
-    const searchUser = function(){
-      $('#searchbarLoader').show();
+    var instaMessageShown = false;
+    const searchUser = function () {
       let input = $('#searchBar').value();
-      request.get('https://www.instagram.com/web/search/topsearch/?context=user&query=' + input).then((res) => {
-        try {
-          usersArray = JSON.parse(res.data)['users'];
-        } catch (error) {
-          $f7.dialog.alert('Instagram blocked your request', 'An Error');
-        }
-        
-        $('#searchbarLoader').hide();
+      if (input !== undefined && input !== "") {
+        $('#searchbarLoader').show();
+        request.get('https://www.instagram.com/web/search/topsearch/?context=user&query=' + input).then((res) => {
+          try {
+            usersArray = JSON.parse(res.data)['users'];
+          } catch (error) {
+            if (!instaMessageShown) {
+              $f7.dialog.alert('Instagram blocked your request', 'An Error');
+              instaMessageShown = true;
+            }
+          }
+
+          $('#searchbarLoader').hide();
+          $update();
+        });
+      } else {
+        usersArray = [];
         $update();
-      });
+      }
     }
 
     return $render;

@@ -13,21 +13,35 @@
       </div>
     </div>
     <div class="page-content">
-      <div class="block block-strong">
+      <div class="block block-strong no-hairlines no-margin">
+     
         <img class="profilPic" src="${user.profile_pic_url}"/>
+
+        <div class="aboInfo">
+          <p>${user.edge_owner_to_timeline_media.count}</p>
+          <p>Posts</p>
+        </div>
+
+        <div class="aboInfo">
+          <p>${user.edge_followed_by.count}</p>
+          <p>Subscribers</p>
+        </div>
+        <div class="aboInfo">
+          <p>${user.edge_follow.count}</p>
+          <p>Subscribed</p>
+        </div>
       </div>
-      <div class="list links-list">
-        <ul>
-          
-        </ul>
+      <div class="block block-strong no-hairlines no-margin padding-top-half">
+        <p>${user.biography}</p>
+        ${userURL()}
       </div>
     </div>
   </div>
 </template>
 <script>
+  import './../css/pages/userPage.css'
   export default (props) => {
     const user = props.user.graphql.user;
-
 
     const userTitle = function(){
       if (user.full_name != "") {
@@ -36,10 +50,12 @@
       return user.username; 
     }
 
+    const userURL = function(){
+      if (user.external_url != null) {
+        return <a class="link external" href={user.external_url}>{user.external_url}</a>;
+      }
+    }
 
     return $render;
   }
 </script>
-<style>
-
-</style>
