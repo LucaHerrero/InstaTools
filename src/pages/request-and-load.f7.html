@@ -10,6 +10,12 @@
           </a>
         </div>
         <div class="title">${userTitle()}</div>
+        <div class="right">
+          <a href="#" class="link">
+            <i class="icon material-icons if-md">more_horiz</i>
+            <i class="icon f7-icons if-not-md">ellipsis</i>
+          </a>
+        </div>
       </div>
     </div>
     <div class="page-content">
@@ -24,12 +30,12 @@
         </div>
 
         <div class="aboInfo col-25">
-          <p>${user.edge_followed_by.count}</p>
+          <p class="tooltip-init" data-tooltip=${user.edge_followed_by.count}>${humanFormat(user.edge_followed_by.count)}</p>
           <p>Subscribers</p>
         </div>
 
         <div class="aboInfo col-25">
-          <p>${user.edge_follow.count}</p>
+          <p class="tooltip-init" data-tooltip=${user.edge_follow.count}>${humanFormat(user.edge_follow.count)}</p>
           <p>Subscribed</p>
         </div>
       </div>
@@ -38,14 +44,42 @@
         <p>${user.biography}</p>
         ${userURL()}
       </div>
+
+        ${blockElementCreater("block block-strong no-margin no-padding-horizontal accountInfo", accountInfoElementsCreater())}
+
       <div class="row no-gap">${userPosts()}</div>
+      ${hasMorePages()}
     </div>
   </div>
 </template>
 <script>
   import './../css/pages/userPage.css'
-  export default (props) => {
+  var humanFormat = require('human-format');
+  export default (props, {$}) => {
     const user = props.user.graphql.user;
+
+    const accountInfoElements = {
+      is_business_account: {
+        material_icon: "business_center",
+        ios_icon: "briefcase",
+        name: "Business"
+      },
+      is_joined_recently: {
+        material_icon: "fiber_new",
+        ios_icon: "clock",
+        name: "New"
+      },
+      is_private: {
+        material_icon: "lock",
+        ios_icon: "lock",
+        name: "Private"
+      },
+      is_verified: {
+        material_icon: "verified_user",
+        ios_icon: "checkmark_seal",
+        name: "Verified"
+      }
+    }
 
     const userTitle = function(){
       if (user.full_name != "") {
@@ -63,12 +97,51 @@
     const userPosts = function(){
       let postArray = user.edge_owner_to_timeline_media.edges;
       let outputArray = [];
-      for (let i = 0; i < postArray.length; i++) {
-        let post = <img class="col-33 mediaPost" src={postArray[i].node.display_url}/>;
-        outputArray.push(post);
-
+      if (user.is_private) {
+        return <p>Sorry, this person is privat. </p>
+      } else {
+        for (let i = 0; i < postArray.length; i++) {
+          let post = <img class="col-33 mediaPost" src={postArray[i].node.display_url}/>;
+          outputArray.push(post);
+        }
+        return outputArray
       }
-      return outputArray
+    }
+    
+    const hasMorePages = function(){
+      if (user.edge_owner_to_timeline_media.page_info.has_next_page) {
+        let link = '/user/' + user.username + '/media';
+        return <a href={link} class="button button-fill button-round loadMore">load more</a>;
+      }
+    }
+
+    const accountInfoElementsCreater = function(){
+      let element = [];
+      for (let key in accountInfoElements) {
+        if (user[key] === true) {
+          let elementHTML = <div class="chip">
+                              <div class="chip-media bg-color-blue">
+                                <i class="icon f7-icons if-not-md">{accountInfoElements[key].ios_icon}</i>
+                                <i class="icon material-icons md-only">{accountInfoElements[key].material_icon}</i>
+                              </div>
+                              <div class="chip-label">{accountInfoElements[key].name}</div>
+                            </div>;
+          element.push(elementHTML);
+        }
+      }
+      if (element.length > 0) {
+        return element;
+      }
+      return null;
+    }
+   
+    const blockElementCreater = function(classParameter, elements) {
+      if (elements === null) {
+        return;
+      }
+
+      let blockElement = <div class={classParameter}>{elements}</div>;
+      return blockElement;
     }
 
     return $render;

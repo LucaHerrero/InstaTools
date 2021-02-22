@@ -10,6 +10,8 @@ import Searchbar from 'framework7/components/searchbar';
 import Tabs from 'framework7/components/tabs';
 import Toggle from 'framework7/components/toggle';
 import Typography from 'framework7/components/typography';
+import Tooltip from 'framework7/components/tooltip';
+import Toast from 'framework7/components/toast';
 
 Framework7.use([
   Dialog,
@@ -21,7 +23,9 @@ Framework7.use([
   Radio,
   Toggle,
   Searchbar,
-  Typography
+  Typography,
+  Tooltip,
+  Toast
 ]);
 
 export default Framework7;

@@ -89,6 +89,14 @@
 
           $('#searchbarLoader').hide();
           $update();
+        }).catch(function (){
+
+          let errorToast = $f7.toast.create({
+            text: 'An error occurred, please try again',
+            closeTimeout: 2000,
+          }).open();
+                    
+          $('#searchbarLoader').hide();
         });
       } else {
         usersArray = [];
