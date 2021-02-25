@@ -12,6 +12,10 @@ import Toggle from 'framework7/components/toggle';
 import Typography from 'framework7/components/typography';
 import Tooltip from 'framework7/components/tooltip';
 import Toast from 'framework7/components/toast';
+import Actions from 'framework7/components/actions';
+import PhotoBrowser from 'framework7/components/photo-browser';
+import Popup from 'framework7/components/popup';
+import Swiper from 'framework7/components/swiper';
 
 Framework7.use([
   Dialog,
@@ -25,7 +29,11 @@ Framework7.use([
   Searchbar,
   Typography,
   Tooltip,
-  Toast
+  Toast,
+  Actions,
+  PhotoBrowser,
+  Popup,
+  Swiper
 ]);
 
 export default Framework7;

@@ -12,8 +12,8 @@
         <div class="title">${userTitle()}</div>
         <div class="right">
           <a href="#" class="link">
-            <i class="icon material-icons if-md">more_horiz</i>
-            <i class="icon f7-icons if-not-md">ellipsis</i>
+            <i class="icon material-icons if-md optionsButton">more_horiz</i>
+            <i class="icon f7-icons if-not-md optionsButton">ellipsis</i>
           </a>
         </div>
       </div>
@@ -55,8 +55,53 @@
 <script>
   import './../css/pages/userPage.css'
   var humanFormat = require('human-format');
-  export default (props, {$}) => {
+  export default (props, {$, $f7, $on}) => {
     const user = props.user.graphql.user;
+
+    const showProfilPic = () => {
+      $f7.photoBrowser.create({
+        photos: [user.profile_pic_url_hd],
+        theme: 'dark',
+        toolbar: false
+      }).open();
+    }
+
+    $on('pageInit', () => {
+      var optionsMenu = $f7.actions.create({
+
+      buttons: [
+        [
+          {
+            text: 'Do something',
+            label: true,
+          },
+          {
+            text: 'Show profile picture',
+            onClick: function () {
+              showProfilPic();
+            }
+          },
+          {
+            text: 'Button2',
+          }
+        ],
+        [
+          {
+            text: 'Cancel',
+            color: 'red'
+          }
+        ]
+      ]
+    });
+
+    $('.optionsButton').on('click', () => {
+      optionsMenu.open();
+    });
+
+    $('.profilPic').on('click', () => {
+      showProfilPic();
+    });
+  });
 
     const accountInfoElements = {
       is_business_account: {
@@ -80,6 +125,8 @@
         name: "Verified"
       }
     }
+
+    
 
     const userTitle = function(){
       if (user.full_name != "") {
