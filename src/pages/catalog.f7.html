@@ -77,7 +77,13 @@
       let input = $('#searchBar').value();
       if (input !== undefined && input !== "") {
         $('#searchbarLoader').show();
-        request.get('https://www.instagram.com/web/search/topsearch/?context=user&query=' + input).then((res) => {
+        request({
+          url: 'https://www.instagram.com/web/search/topsearch/?context=user&query=' + input,
+          crossDomain: true,
+          error: function() {
+            request(this);
+          }
+        }).then((res) => {
           try {
             usersArray = JSON.parse(res.data)['users'];
           } catch (error) {
@@ -90,7 +96,9 @@
           $('#searchbarLoader').hide();
           $update();
         }).catch(function (){
-
+          console.log(test)
+          test();
+          return;
           let errorToast = $f7.toast.create({
             text: 'An error occurred, please try again',
             closeTimeout: 2000,
