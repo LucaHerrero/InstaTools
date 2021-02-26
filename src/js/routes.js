@@ -56,11 +56,19 @@ var routes = [{
       var userName = to.params.userName;
 
       // Simulate Ajax Request
-      app.request.get('https://www.instagram.com/' + userName + '/?__a=1')
-        .then(function (res) {
-          console.log(res.data);
+
+      app.request({
+        url: 'https://www.instagram.com/' + userName + '/?__a=1',
+        crossDomain: true,
+        error: function() {
+          request(this);
+        },
+        success: function(){
           app.preloader.hide();
-          var user = JSON.parse(res.data);
+        }
+
+      }).then(function (res) {
+        var user = JSON.parse(res.data);
           resolve({
             component: RequestAndLoad,
           }, {
