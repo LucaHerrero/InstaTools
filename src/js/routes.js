@@ -64,7 +64,6 @@ var routes = [{
           app.request(this);
         },
         success: function(data){
-          app.preloader.hide();
           console.log(data);
           var user = JSON.parse(data);
           resolve({
@@ -74,12 +73,9 @@ var routes = [{
               user: user,
             }
           });
-        }
-
-      })
-        .catch(function (err) {
           app.preloader.hide();
-        })
+        }
+      })
     },
   },
   {
