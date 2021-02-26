@@ -29,3 +29,5 @@ var app = new Framework7({
   // App routes
   routes: routes,
 });
+
+const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm;

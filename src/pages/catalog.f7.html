@@ -8,11 +8,11 @@
           <form class="searchbar" id="searchbar-autocomplete">
             <div class="searchbar-inner">
               <div class="searchbar-input-wrap">
-                <input type="search" id="searchBar" placeholder="Search" oninput="${searchUser}"/>
+                <input type="search" id="searchBar" placeholder="Search"/>
                 <i class="searchbar-icon"></i>
                 <span class="input-clear-button"></span>
               </div>
-              <div class="preloader color-multi" id="searchbarLoader" style="display:none"></div>
+              
               <span class="searchbar-disable-button">Cancel</span>
             </div>
           </form>
@@ -20,6 +20,8 @@
       </div>
     </div>
     <div class="page-content">
+      <div class="preloader color-multi"></div>
+
       <div class="list no-margin-top">
         <ul>
           ${usersArray.map((users) => $h`
@@ -50,9 +52,25 @@
   export default (props, {
     $update,
     $,
-    $f7
+    $f7, 
+    $on
   }) => {
     let usersArray = [];
+
+    const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm;
+    let searchbar;
+    $on('pageInit', () => {
+      searchbar = $f7.searchbar.create({
+        el: '#searchbar-autocomplete',
+        customSearch: true,
+        disableButtonEl: 'searchbar-disable-button',
+        on: {
+          search: function (sb, query) {
+            searchUser(query);
+          }
+        }
+      })
+    });
 
     const verifiedUser = function (booleanValue) {
       if (booleanValue) {
@@ -73,9 +91,8 @@
     }
 
     var instaMessageShown = false;
-    const searchUser = function () {
-      let input = $('#searchBar').value();
-      if (input !== undefined && input !== "") {
+    const searchUser = function (input) {
+      if (input !== undefined && input !== "" && usernameRegex.test(input)) {
         $('#searchbarLoader').show();
         request({
           url: 'https://www.instagram.com/web/search/topsearch/?context=user&query=' + input,
