@@ -61,14 +61,12 @@ var routes = [{
         url: 'https://www.instagram.com/' + userName + '/?__a=1',
         crossDomain: true,
         error: function() {
-          request(this);
+          app.request(this);
         },
-        success: function(){
+        success: function(data){
           app.preloader.hide();
-        }
-
-      }).then(function (res) {
-        var user = JSON.parse(res.data);
+          console.log(data);
+          var user = JSON.parse(data);
           resolve({
             component: RequestAndLoad,
           }, {
@@ -76,7 +74,9 @@ var routes = [{
               user: user,
             }
           });
-        })
+        }
+
+      })
         .catch(function (err) {
           app.preloader.hide();
         })
