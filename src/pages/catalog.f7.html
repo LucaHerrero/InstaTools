@@ -79,14 +79,15 @@
         $('#searchbarLoader').show();
         request({
           url: 'https://www.instagram.com/web/search/topsearch/?context=user&query=' + input,
-          crossDomain: true,
+          async: true,
           error: function() {
             request(this);
-          }
-        }).then((res) => {
-          try {
-            usersArray = JSON.parse(res.data)['users'];
-          } catch (error) {
+            return;
+          },
+          success: function (data) {
+            try {
+            usersArray = JSON.parse(data)['users'];
+            } catch (error) {
             if (!instaMessageShown) {
               $f7.dialog.alert('Instagram blocked your request', 'An Error');
               instaMessageShown = true;
@@ -95,16 +96,7 @@
 
           $('#searchbarLoader').hide();
           $update();
-        }).catch(function (){
-          console.log(test)
-          test();
-          return;
-          let errorToast = $f7.toast.create({
-            text: 'An error occurred, please try again',
-            closeTimeout: 2000,
-          }).open();
-                    
-          $('#searchbarLoader').hide();
+          }
         });
       } else {
         usersArray = [];
