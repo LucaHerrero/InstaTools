@@ -26,9 +26,17 @@
     <!-- Scrollable page content-->
     <div class="page-content">
       <div class="block block-strong">
-        <p>This is an example of tabs-layout application. The main point of such tabbed layout is that each tab contains independent view with its own routing and navigation.</p>
-
-        <p>Each tab/view may have different layout, different navbar type (dynamic, fixed or static) or without navbar like this tab.</p>
+        <div class="swiper-container" id="historySwiper">
+        <div class="swiper-pagination"></div>
+        <div class="swiper-wrapper">
+          ${getHistory().map((user) => $h`
+            <div class="swiper-slide">
+              <img src=${user.profilPicURL} />
+              <p>${user.username}</p></div>
+          `)}
+        </div>
+      </div>
+        
       </div>
       <div class="block-title">Navigation</div>
       <div class="list">
@@ -91,7 +99,25 @@
   </div>
 </template>
 <script>
-export default () => {
+import './../css/pages/home.css'
+
+import {addtoHistory, getHistory} from './../js/app';
+export default (app, {$, $on, $f7}) => {
+
+  $on('pageInit', () => {
+    console.log(getHistory());
+    var swiper = $f7.swiper.create('#historySwiper', {
+      speed: 400,
+      spaceBetween: 25,
+      slidesPerView: 'auto'
+    });
+  });
+
+
+
+
+
+
   return $render;
 }
 </script>

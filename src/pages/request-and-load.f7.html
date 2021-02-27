@@ -56,7 +56,7 @@
   import './../css/pages/userPage.css'
   var humanFormat = require('human-format');
   export default (props, {$, $f7, $on}) => {
-    const user = props.user.graphql.user;
+    const user = props.user;
 
     const showProfilPic = () => {
       $f7.photoBrowser.create({
