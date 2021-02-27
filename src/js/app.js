@@ -30,4 +30,43 @@ var app = new Framework7({
   routes: routes,
 });
 
-const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/igm;
+const addtoHistory = (name, username, profilPicURL) => {
+  let history = getHistory();
+
+  const user = {
+    name: name,
+    username: username,
+    profilPicURL: profilPicURL
+  };
+
+  if (history === null) {
+    history = [];
+    history.push(user);
+  } else {
+    let userdeleted = false;
+    for (let i = 0; i < history.length; i++) {
+      if (history[i].username === username) {
+        history.splice(i, 1);
+        userdeleted = true;
+      }
+    }
+
+    if (userdeleted === false && history.length > 50) {
+      history.pop();
+    }
+    history.unshift(user);
+  }
+  localStorage.setItem('history', JSON.stringify(history));
+}
+
+const getHistory = () => {
+  const history = localStorage.getItem('history');
+
+  if (history != null) {
+    return JSON.parse(history);
+  }
+
+  return null;
+}
+
+export {addtoHistory, getHistory};

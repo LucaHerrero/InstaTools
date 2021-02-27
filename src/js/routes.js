@@ -9,6 +9,8 @@ import DynamicRoutePage from '../pages/dynamic-route.f7.html';
 import RequestAndLoad from '../pages/request-and-load.f7.html';
 import NotFoundPage from '../pages/404.f7.html';
 
+import {addtoHistory, getHistory} from './app';
+
 var routes = [{
     path: '/',
     component: HomePage,
@@ -65,7 +67,8 @@ var routes = [{
         },
         success: function(data){
           console.log(data);
-          var user = JSON.parse(data);
+          let user = JSON.parse(data);
+          user = user.graphql.user;
           resolve({
             component: RequestAndLoad,
           }, {
@@ -73,6 +76,9 @@ var routes = [{
               user: user,
             }
           });
+
+          addtoHistory(user.full_name, user.username, user.profile_pic_url);
+
           app.preloader.hide();
         }
       })
